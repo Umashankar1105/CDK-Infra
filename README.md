@@ -20,7 +20,7 @@ Ensure you have Python 3.x, AWS CLI, and AWS CDK installed. Configure AWS CLI wi
  **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-repository/serverless-data-pipeline.git
+   git clone https://github.com/Umashankar1105/CDK-Infra.git
    cd serverless-data-pipeline
    ```
 

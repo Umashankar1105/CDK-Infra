@@ -1,4 +1,4 @@
-# Welcome to your CDK TypeScript project
+# Welcome to AWS CDK  POC
 
 This project sets up a serverless data processing pipeline using AWS CDK. It integrates API Gateway, Lambda, and DynamoDB to handle file uploads, process the data, and store the results in a scalable database.
 

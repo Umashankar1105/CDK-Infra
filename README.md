@@ -15,7 +15,7 @@ This project sets up a serverless data processing pipeline using AWS CDK. It int
 
 ### Prerequisites
 
-Ensure you have Python 3.x, AWS CLI, and AWS CDK installed. Configure AWS CLI with your credentials.
+Ensure you have nodejsx, AWS CLI, and AWS CDK installed. Configure AWS CLI with your credentials.
 
  **Clone the repository:**
 

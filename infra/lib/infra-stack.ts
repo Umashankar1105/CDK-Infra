@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as path from 'path';
 
 export class InfraStack extends cdk.Stack {
@@ -39,5 +40,59 @@ export class InfraStack extends cdk.Stack {
     });
 
     api.root.addMethod('POST', postIntegration);
+     // CloudWatch Dashboard
+     const dashboard = new cloudwatch.Dashboard(this, 'DataPipelineDashboard', {
+      dashboardName: 'DataPipelineMonitoring',
+    });
+
+    // Lambda Metrics
+    const lambdaInvocations = dataProcessor.metricInvocations();
+    const lambdaErrors = dataProcessor.metricErrors();
+    const lambdaDuration = dataProcessor.metricDuration();
+
+    // API Gateway Metrics
+    const apiLatency = api.metricLatency();
+    const apiCount = api.metricCount();
+
+    // DynamoDB Metrics
+    const dynamoReadCapacity = table.metricConsumedReadCapacityUnits();
+    const dynamoWriteCapacity = table.metricConsumedWriteCapacityUnits();
+    const dynamoThrottles = table.metricThrottledRequests();
+
+    // Adding widgets to the dashboard
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'Lambda Invocations',
+        left: [lambdaInvocations],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'Lambda Errors',
+        left: [lambdaErrors],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'Lambda Duration',
+        left: [lambdaDuration],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'API Gateway Latency',
+        left: [apiLatency],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'API Gateway Request Count',
+        left: [apiCount],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB Read Capacity',
+        left: [dynamoReadCapacity],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB Write Capacity',
+        left: [dynamoWriteCapacity],
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB Throttles',
+        left: [dynamoThrottles],
+      })
+    );
   }
 }

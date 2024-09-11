@@ -15,7 +15,7 @@ This project sets up a serverless data processing pipeline using AWS CDK. It int
 
 ### Prerequisites
 
-Ensure you have nodejsx, AWS CLI, and AWS CDK installed. Configure AWS CLI with your credentials.
+Ensure we have nodejsx, AWS CLI, and AWS CDK installed. Configure AWS CLI with your credentials.
 
  **Clone the repository:**
 
@@ -95,17 +95,28 @@ This command will create all the necessary AWS resources, including the API Gate
 
 ## Step 4: Testing the API
 
-After deployment, you can test the API by uploading a text file using `curl`:
+After deployment, we can test the API by uploading a text file using `curl`:
 
 ```bash
-curl -X POST -H "Content-Type: text/plain" --data-binary "@sample.txt" https://r9vszfqsr4.execute-api.us-east-1.amazonaws.com/prod
+curl -X POST -H "Content-Type: application/json" --data "{\"fileContent\":\"$(cat sample.txt)\"}" https://r9vszfqsr4.execute-api.us-east-1.amazonaws.com/prod
 ```
 
 Replace `sample.txt` with the path to your text file, and `https://your-api-gateway-url/your-endpoint` with the actual URL of your API Gateway.
 
 ## Step 5: Monitoring and Logging
 
-we can monitor the performance and logs of your Lambda function in **Amazon CloudWatch**.
+1. **CloudWatch Dashboard**:
+   - A CloudWatch Dashboard named `DataPipelineMonitoring` is automatically created.
+   - This dashboard tracks key performance metrics for **Lambda**, **API Gateway**, and **DynamoDB**.
+
+2. **Key Metrics**:
+   - **Lambda**: Tracks invocations, errors, and duration (execution time).
+   - **API Gateway**: Tracks request count, latency, and 5XX errors.
+   - **DynamoDB**: Tracks read/write capacity and throttled requests.
+
+3. **Accessing Metrics**:
+   - we can view the metrics directly from the **CloudWatch Console** by navigating to the **Dashboards** section.
+   - All performance metrics for the stack are centrally available in the dashboard for real-time monitoring and troubleshooting.
 
 ## Step 6: Removing the Stack
 
@@ -117,6 +128,13 @@ cdk destroy
 
 This will delete the CloudFormation stack along with all the associated resources like the Lambda function, DynamoDB table, and API Gateway.
 
+### step 7: Security Configuration
+
+1. **IAM Roles**:
+   - The Lambda function is secured with an **IAM Role** that grants it the necessary permissions to interact with **DynamoDB**. This ensures that the Lambda function has only the minimum required access, following the **principle of least privilege**.
+
+2. **API Gateway Security**:
+   - **API Gateway** is secured using built-in policies to restrict access. we can further enhance security by adding **IAM authorizations**, **API keys**, or **CORS policies** to control who can access the API endpoints.
 ## Summary
 
 This project is a complete serverless data processing pipeline that integrates API Gateway, Lambda, and DynamoDB, all managed via AWS CDK. The stack is secure, scalable, and easily deployable via CLI commands.
